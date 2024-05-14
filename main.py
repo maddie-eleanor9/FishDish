@@ -1,6 +1,7 @@
 import pygame
 import random
 from instructions import Instructions
+from player import Player
 
 #setup pygame
 pygame.init()
@@ -29,6 +30,9 @@ lost_enemy = False
 r = 24
 g = 56
 b = 99
+mouse_x = 0
+mouse_y = 0
+coordinates = (mouse_x, mouse_y)
 
 #rendering text
 title = "Fish Dish"
@@ -57,8 +61,10 @@ print(display_instruction4.get_size())
 instruction5 = "Press space to start!"
 display_instruction5 = instructions_font.render(instruction5, True, (255, 255, 255))
 print(display_instruction5.get_size())
+
 #making sprites
 i = Instructions(195, 200)
+p = Player(30, 56)
 
 run = True
 #main program loop
@@ -80,6 +86,9 @@ while run:
             if i.rect.collidepoint(event.pos):
                 start_screen = False
                 instructions_screen = True
+        if event.type == pygame.MOUSEMOTION:
+            mouse_x, mouse_y = event.pos
+            coordinates = (mouse_x, mouse_y)
     #blit sprites
     screen.fill((r, g, b))
     if start_screen == True:
@@ -95,6 +104,7 @@ while run:
         screen.blit(display_instruction5, (176, 240))
     elif level_1 == True:
         screen.fill((255, 0, 0))
+        screen.blit(p.image, p.rect)
     pygame.display.update()
 
 
