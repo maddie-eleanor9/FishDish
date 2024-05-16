@@ -2,6 +2,8 @@ import pygame
 import random
 from instructions import Instructions
 from player import Player
+from light import Light
+
 
 #setup pygame
 pygame.init()
@@ -11,11 +13,13 @@ space_to_start_font = pygame.font.SysFont('Showcard Gothic', 20)
 instructions_font = pygame.font.SysFont('Rockwell', 20)
 pygame.display.set_caption("Fish Dish")
 
+
 #setup screen
 SCREEN_HEIGHT = 370
 SCREEN_WIDTH = 530
 size = (SCREEN_WIDTH, SCREEN_HEIGHT)
 screen = pygame.display.set_mode(size)
+
 
 #different screens
 start_screen = True
@@ -26,6 +30,7 @@ win_screen = False
 lost_food = False
 lost_enemy = False
 
+
 #misc variables
 r = 24
 g = 56
@@ -33,6 +38,7 @@ b = 99
 mouse_x = 0
 mouse_y = 0
 coordinates = (mouse_x, mouse_y)
+
 
 #rendering text
 title = "Fish Dish"
@@ -62,13 +68,30 @@ instruction5 = "Press space to start!"
 display_instruction5 = instructions_font.render(instruction5, True, (255, 255, 255))
 print(display_instruction5.get_size())
 
+
 #making sprites
 i = Instructions(195, 200)
 p = Player(30, 56)
+l = Light(30, 56)
+
 
 run = True
 #main program loop
 while run:
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_d]:
+        p.move_direction("right")
+        l.move_direction("right")
+    elif keys[pygame.K_a]:
+        p.move_direction("left")
+        l.move_direction("left")
+    elif keys[pygame.K_w]:
+        p.move_direction("up")
+        l.move_direction("up")
+    elif keys[pygame.K_s]:
+        p.move_direction("down")
+        l.move_direction("down")
+
 
     #event loop
     for event in pygame.event.get():
@@ -89,6 +112,8 @@ while run:
         if event.type == pygame.MOUSEMOTION:
             mouse_x, mouse_y = event.pos
             coordinates = (mouse_x, mouse_y)
+
+
     #blit sprites
     screen.fill((r, g, b))
     if start_screen == True:
@@ -105,6 +130,7 @@ while run:
     elif level_1 == True:
         screen.fill((255, 0, 0))
         screen.blit(p.image, p.rect)
+        screen.blit(l.image, l.rect)
     pygame.display.update()
 
 
