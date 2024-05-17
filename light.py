@@ -7,6 +7,8 @@ class Light:
         self.x = x
         self.y = y
         self.image = pygame.image.load("light.png")
+        self.image.convert_alpha(self.image)
+        self.image.set_alpha(215)
         self.image_size = self.image.get_size()
         self.rect = pygame.Rect(self.x, self.y, self.image_size[0], self.image_size[1])
         self.delta = .1

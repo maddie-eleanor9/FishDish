@@ -3,7 +3,7 @@ import random
 from instructions import Instructions
 from player import Player
 from light import Light
-
+from shrimp import Shrimp
 
 #setup pygame
 pygame.init()
@@ -50,30 +50,25 @@ display_space_to_start = space_to_start_font.render(space_to_start, True, (255, 
 
 instruction1 = "Use WASD to move"
 display_instruction1 = instructions_font.render(instruction1, True, (255, 255, 255))
-print(display_instruction1.get_size())
 
 instruction2 = "Try to collect enough food for the day"
 display_instruction2 = instructions_font.render(instruction2, True, (255, 255, 255))
-print(display_instruction2.get_size())
 
 instruction3 = "Pay attention to the timer"
 display_instruction3 = instructions_font.render(instruction3, True, (255, 255, 255))
-print(display_instruction3.get_size())
 
 instruction4 = "And watch out for sharks and any bigger fish!!"
 display_instruction4 = instructions_font.render(instruction4, True, (255, 255, 255))
-print(display_instruction4.get_size())
 
 instruction5 = "Press space to start!"
 display_instruction5 = instructions_font.render(instruction5, True, (255, 255, 255))
-print(display_instruction5.get_size())
 
 
 #making sprites
 i = Instructions(195, 200)
-p = Player(30, 56)
-l = Light(30, 56)
-
+p = Player(230, 155)
+l = Light(215, 135)
+s1 = Shrimp(50, 50)
 
 run = True
 #main program loop
@@ -128,9 +123,10 @@ while run:
         screen.blit(display_instruction4, (56, 205))
         screen.blit(display_instruction5, (176, 240))
     elif level_1 == True:
-        screen.fill((255, 0, 0))
-        screen.blit(p.image, p.rect)
+        screen.fill((0, 31, 82))
         screen.blit(l.image, l.rect)
+        screen.blit(p.image, p.rect)
+        screen.blit(s1.image, s1.rect)
     pygame.display.update()
 
 
