@@ -12,7 +12,7 @@ title_font = pygame.font.SysFont('Showcard Gothic', 60)
 space_to_start_font = pygame.font.SysFont('Showcard Gothic', 20)
 instructions_font = pygame.font.SysFont('Rockwell', 20)
 pygame.display.set_caption("Fish Dish")
-
+bg = pygame.image.load("background.png")
 
 #setup screen
 SCREEN_HEIGHT = 370
@@ -123,10 +123,11 @@ while run:
         screen.blit(display_instruction4, (56, 205))
         screen.blit(display_instruction5, (176, 240))
     elif level_1 == True:
-        screen.fill((0, 31, 82))
+        screen.blit(bg, (0, 0))
+        screen.blit(s1.image, s1.rect)
         screen.blit(l.image, l.rect)
         screen.blit(p.image, p.rect)
-        screen.blit(s1.image, s1.rect)
+
     pygame.display.update()
 
 
