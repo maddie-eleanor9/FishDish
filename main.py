@@ -4,6 +4,7 @@ from instructions import Instructions
 from player import Player
 from light import Light
 from shrimp import Shrimp
+from light2 import Light2
 
 #setup pygame
 pygame.init()
@@ -67,7 +68,7 @@ display_instruction5 = instructions_font.render(instruction5, True, (255, 255, 2
 #making sprites
 i = Instructions(195, 200)
 p = Player(230, 155)
-l = Light(215, 135)
+l = Light2(215, 135)
 s1 = Shrimp(50, 50)
 
 run = True
@@ -125,7 +126,7 @@ while run:
     elif level_1 == True:
         screen.blit(bg, (0, 0))
         screen.blit(s1.image, s1.rect)
-        screen.blit(l.image, l.rect)
+        screen.blit(l.image, l.rect, special_flags=pygame.BLEND_RGB_ADD)
         screen.blit(p.image, p.rect)
 
     pygame.display.update()
