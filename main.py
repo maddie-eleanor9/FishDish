@@ -2,9 +2,11 @@ import pygame
 import random
 from instructions import Instructions
 from player import Player
-from light import Light
-from shrimp import Shrimp
+from food import Food
 from light2 import Light2
+import time
+
+
 
 #setup pygame
 pygame.init()
@@ -69,7 +71,7 @@ display_instruction5 = instructions_font.render(instruction5, True, (255, 255, 2
 i = Instructions(195, 200)
 p = Player(230, 155)
 l = Light2(215, 135)
-s1 = Shrimp(50, 50)
+f1 = Food(50, 50)
 
 run = True
 #main program loop
@@ -88,6 +90,10 @@ while run:
         p.move_direction("down")
         l.move_direction("down")
 
+        if level_1 == True:
+            current_time = time.time()
+            if current_time == start_time + 3:
+
 
     #event loop
     for event in pygame.event.get():
@@ -100,6 +106,9 @@ while run:
                 start_screen = False
                 instructions_screen = False
                 level_1 = True
+                current_time = time.time()
+                start_time = current_time
+
 
         if event.type == pygame.MOUSEBUTTONUP and start_screen == True:
             if i.rect.collidepoint(event.pos):
@@ -125,7 +134,7 @@ while run:
         screen.blit(display_instruction5, (176, 240))
     elif level_1 == True:
         screen.blit(bg, (0, 0))
-        screen.blit(s1.image, s1.rect)
+        screen.blit(f1.image, f1.rect)
         screen.blit(l.image, l.rect, special_flags=pygame.BLEND_RGB_ADD)
         screen.blit(p.image, p.rect)
 
