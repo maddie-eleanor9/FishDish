@@ -16,6 +16,8 @@ space_to_start_font = pygame.font.SysFont('Showcard Gothic', 20)
 instructions_font = pygame.font.SysFont('Rockwell', 20)
 pygame.display.set_caption("Fish Dish")
 bg = pygame.image.load("background.png")
+bg_filter = pygame.image.load("background.png")
+bg_filter.set_alpha(200)
 
 #setup screen
 SCREEN_HEIGHT = 370
@@ -90,9 +92,9 @@ while run:
         p.move_direction("down")
         l.move_direction("down")
 
-        if level_1 == True:
-            current_time = time.time()
-            if current_time == start_time + 3:
+        # if level_1 == True:
+        #     current_time = time.time()
+        #     if current_time == start_time + 3:
 
 
     #event loop
@@ -135,6 +137,7 @@ while run:
     elif level_1 == True:
         screen.blit(bg, (0, 0))
         screen.blit(f1.image, f1.rect)
+        screen.blit(bg_filter, (0, 0))
         screen.blit(l.image, l.rect, special_flags=pygame.BLEND_RGB_ADD)
         screen.blit(p.image, p.rect)
 
