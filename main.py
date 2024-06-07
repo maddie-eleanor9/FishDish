@@ -17,7 +17,7 @@ instructions_font = pygame.font.SysFont('Rockwell', 20)
 pygame.display.set_caption("Fish Dish")
 bg = pygame.image.load("background.png")
 bg_filter = pygame.image.load("background.png")
-bg_filter.set_alpha(200)
+bg_filter.set_alpha(230)
 
 #setup screen
 SCREEN_HEIGHT = 370
@@ -43,7 +43,7 @@ b = 99
 mouse_x = 0
 mouse_y = 0
 coordinates = (mouse_x, mouse_y)
-
+points = 0
 
 #rendering text
 title = "Fish Dish"
@@ -72,8 +72,10 @@ display_instruction5 = instructions_font.render(instruction5, True, (255, 255, 2
 #making sprites
 i = Instructions(195, 200)
 p = Player(230, 155)
-l = Light2(215, 135)
-f1 = Food(50, 50)
+l = Light2(200, 125)
+f1_x = random.randint(1,490)
+f1_y = random.randint(1, 330)
+f1 = Food(f1_x, f1_y)
 
 run = True
 #main program loop
@@ -92,10 +94,19 @@ while run:
         p.move_direction("down")
         l.move_direction("down")
 
-        # if level_1 == True:
-        #     current_time = time.time()
-        #     if current_time == start_time + 3:
+    if level_1 == True:
+        current_time = time.time()
+        if current_time == start_time + 3:
+            print("up")
+            f1.move("up",5)
+        if current_time % 5 == 0:
+            print("down")
+            f1.move("down", 5)
 
+        if p.rect.colliderect(f1.rect):
+            print("collided")
+            points = points + 1
+            f1 = Food(1000, 1000)
 
     #event loop
     for event in pygame.event.get():
@@ -110,7 +121,8 @@ while run:
                 level_1 = True
                 current_time = time.time()
                 start_time = current_time
-
+                print("start time: " + str(start_time))
+                print("current_time: " + str(current_time))
 
         if event.type == pygame.MOUSEBUTTONUP and start_screen == True:
             if i.rect.collidepoint(event.pos):
