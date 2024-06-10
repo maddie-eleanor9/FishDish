@@ -4,6 +4,7 @@ from instructions import Instructions
 from player import Player
 from food import Food
 from light2 import Light2
+from jellyfish import Jellyfish
 import time
 
 
@@ -13,6 +14,7 @@ pygame.init()
 pygame.font.init()
 title_font = pygame.font.SysFont('Showcard Gothic', 60)
 space_to_start_font = pygame.font.SysFont('Showcard Gothic', 20)
+score_font = pygame.font.SysFont('Showcard Gothic', 10)
 instructions_font = pygame.font.SysFont('Rockwell', 20)
 pygame.display.set_caption("Fish Dish")
 bg = pygame.image.load("background.png")
@@ -43,7 +45,8 @@ b = 99
 mouse_x = 0
 mouse_y = 0
 coordinates = (mouse_x, mouse_y)
-points = 0
+food_needed = 10
+time_left = 20
 
 #rendering text
 title = "Fish Dish"
@@ -62,12 +65,27 @@ display_instruction2 = instructions_font.render(instruction2, True, (255, 255, 2
 instruction3 = "Pay attention to the timer"
 display_instruction3 = instructions_font.render(instruction3, True, (255, 255, 255))
 
-instruction4 = "And watch out for sharks and any bigger fish!!"
+instruction4 = "And watch out for jellyfish!!"
 display_instruction4 = instructions_font.render(instruction4, True, (255, 255, 255))
 
 instruction5 = "Press space to start!"
 display_instruction5 = instructions_font.render(instruction5, True, (255, 255, 255))
 
+food_needed_text = "Food Needed: "
+display_food_needed = score_font.render(food_needed_text + str(food_needed), True, (255, 255, 255))
+
+timer_text = "Time Left: "
+display_timer = score_font.render(timer_text + str(time_left), True, (255, 255, 255))
+
+lost_jellyfish_text = "Your ran into a jellyfish and lost!"
+display_lost_jellyfish = space_to_start_font.render(lost_jellyfish_text, True, (255, 255, 255))
+
+lost_food_text = "You didn't get enough food in time!"
+display_lost_food = space_to_start_font.render(lost_food_text, True, (255, 255, 255))
+
+win_text = "You Won!!"
+display_win = space_to_start_font.render(win_text, True, (255, 255, 255))
+print("win text: " + str(display_win.get_size()))
 
 #making sprites
 i = Instructions(195, 200)
@@ -76,6 +94,9 @@ l = Light2(200, 125)
 f1_x = random.randint(1,490)
 f1_y = random.randint(1, 330)
 f1 = Food(f1_x, f1_y)
+j_x = random.randint(1,490)
+j_y = random.randint(1,330)
+j1 = Jellyfish(j_x, j_y)
 
 run = True
 #main program loop
@@ -96,18 +117,63 @@ while run:
 
     if level_1 == True:
         current_time = time.time()
-        if current_time == start_time + 3:
-            print("up")
-            f1.move("up",5)
-        if current_time % 5 == 0:
-            print("down")
-            f1.move("down", 5)
+        calculate_seconds = round(current_time - start_time, 2)
+        time_left = round(20 - calculate_seconds, 2)
+        timer_text = "Time Left: "
+        display_timer = score_font.render(timer_text + str(time_left), True, (255, 255, 255))
+
+
+        if calculate_seconds % 3 == 0:
+            fish_move = random.randint(1,4)
+            if fish_move == 1 and f1.y > 40:
+                f1.move("up",50)
+                print("fish up")
+            elif fish_move == 2 and f1.y < 270:
+                f1.move("down", 50)
+                print("fish down")
+            elif fish_move == 3 and f1.x > 40:
+                f1.move("left", 50)
+                print("fish left")
+            elif fish_move == 4 and f1.x < 490:
+                f1.move("right", 50)
+                print("fish right")
+
+        if time_left <= 0:
+            level_1 = False
+            lost_food = True
+
+
+        if calculate_seconds % 4 == 0:
+            jellyfish_move = random.randint(1, 4)
+            if jellyfish_move == 1 and j1.y > 100:
+                j1.move("up", 70)
+                print("jellyfish up")
+            elif jellyfish_move == 2 and j1.y < 430:
+                j1.move("down", 70)
+                print("jellyfish down")
+            elif jellyfish_move == 3 and j1.x > 100:
+                j1.move("left", 70)
+                print("jellyfish left")
+            elif jellyfish_move == 4 and j1.x < 490:
+                j1.move("right", 70)
+                print("jellyfish right")
 
         if p.rect.colliderect(f1.rect):
             print("collided")
-            points = points + 1
-            f1 = Food(1000, 1000)
+            food_needed = food_needed - 1
+            f1_x = random.randint(1, 490)
+            f1_y = random.randint(1, 330)
+            f1 = Food(f1_x, f1_y)
+            display_food_needed = score_font.render(food_needed_text + str(food_needed), True, (255, 255, 255))
 
+        if p.rect.colliderect(j1.rect):
+            level_1 = False
+            lost_enemy = True
+
+
+        if food_needed == 0:
+            level_1 = False
+            win_screen = True
     #event loop
     for event in pygame.event.get():
 
@@ -149,10 +215,18 @@ while run:
     elif level_1 == True:
         screen.blit(bg, (0, 0))
         screen.blit(f1.image, f1.rect)
+        screen.blit(j1.image, j1.rect)
         screen.blit(bg_filter, (0, 0))
         screen.blit(l.image, l.rect, special_flags=pygame.BLEND_RGB_ADD)
         screen.blit(p.image, p.rect)
-
+        screen.blit(display_food_needed, (10, 10))
+        screen.blit(display_timer, (10, 30))
+    elif lost_enemy == True:
+        screen.blit(display_lost_jellyfish, (77, 175))
+    elif lost_food == True:
+        screen.blit(display_lost_food, (72, 175))
+    elif win_screen == True:
+        screen.blit(display_win, (209, 175))
     pygame.display.update()
 
 
