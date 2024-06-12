@@ -19,7 +19,7 @@ instructions_font = pygame.font.SysFont('Rockwell', 20)
 pygame.display.set_caption("Fish Dish")
 bg = pygame.image.load("background.png")
 bg_filter = pygame.image.load("background.png")
-bg_filter.set_alpha(230)
+bg_filter.set_alpha(250)
 
 #setup screen
 SCREEN_HEIGHT = 370
@@ -46,7 +46,7 @@ mouse_x = 0
 mouse_y = 0
 coordinates = (mouse_x, mouse_y)
 food_needed = 10
-time_left = 20
+time_left = 45
 
 #rendering text
 title = "Fish Dish"
@@ -90,13 +90,16 @@ print("win text: " + str(display_win.get_size()))
 #making sprites
 i = Instructions(195, 200)
 p = Player(230, 155)
-l = Light2(200, 125)
+l = Light2(200, 105)
 f1_x = random.randint(1,490)
 f1_y = random.randint(1, 330)
 f1 = Food(f1_x, f1_y)
-j_x = random.randint(1,490)
-j_y = random.randint(1,330)
-j1 = Jellyfish(j_x, j_y)
+j1_x = random.randint(1,490)
+j1_y = random.randint(1,330)
+j1 = Jellyfish(j1_x, j1_y)
+j2_x = random.randint(1,490)
+j2_y = random.randint(1,330)
+j2 = Jellyfish(j2_x,j2_y)
 
 run = True
 #main program loop
@@ -118,7 +121,7 @@ while run:
     if level_1 == True:
         current_time = time.time()
         calculate_seconds = round(current_time - start_time, 2)
-        time_left = round(20 - calculate_seconds, 2)
+        time_left = round(45 - calculate_seconds, 2)
         timer_text = "Time Left: "
         display_timer = score_font.render(timer_text + str(time_left), True, (255, 255, 255))
 
@@ -127,46 +130,50 @@ while run:
             fish_move = random.randint(1,4)
             if fish_move == 1 and f1.y > 40:
                 f1.move("up",50)
-                print("fish up")
             elif fish_move == 2 and f1.y < 270:
                 f1.move("down", 50)
-                print("fish down")
             elif fish_move == 3 and f1.x > 40:
                 f1.move("left", 50)
-                print("fish left")
             elif fish_move == 4 and f1.x < 490:
                 f1.move("right", 50)
-                print("fish right")
-
-        if time_left <= 0:
-            level_1 = False
-            lost_food = True
 
 
         if calculate_seconds % 4 == 0:
             jellyfish_move = random.randint(1, 4)
             if jellyfish_move == 1 and j1.y > 100:
                 j1.move("up", 70)
-                print("jellyfish up")
             elif jellyfish_move == 2 and j1.y < 430:
                 j1.move("down", 70)
-                print("jellyfish down")
             elif jellyfish_move == 3 and j1.x > 100:
                 j1.move("left", 70)
-                print("jellyfish left")
             elif jellyfish_move == 4 and j1.x < 490:
                 j1.move("right", 70)
-                print("jellyfish right")
+
+            jellyfish_move = random.randint(1, 4)
+            if jellyfish_move == 1 and j2.y > 100:
+                j2.move("up", 70)
+            elif jellyfish_move == 2 and j2.y < 430:
+                j2.move("down", 70)
+            elif jellyfish_move == 3 and j2.x > 100:
+                j2.move("left", 70)
+            elif jellyfish_move == 4 and j2.x < 490:
+                j2.move("right", 70)
+
+
+
+        if time_left <= 0:
+            level_1 = False
+            lost_food = True
+
 
         if p.rect.colliderect(f1.rect):
-            print("collided")
             food_needed = food_needed - 1
             f1_x = random.randint(1, 490)
             f1_y = random.randint(1, 330)
             f1 = Food(f1_x, f1_y)
             display_food_needed = score_font.render(food_needed_text + str(food_needed), True, (255, 255, 255))
 
-        if p.rect.colliderect(j1.rect):
+        if p.rect.colliderect(j1.rect) or p.rect.colliderect(j2.rect):
             level_1 = False
             lost_enemy = True
 
@@ -216,8 +223,9 @@ while run:
         screen.blit(bg, (0, 0))
         screen.blit(f1.image, f1.rect)
         screen.blit(j1.image, j1.rect)
+        screen.blit(j2.image, j2.rect)
         screen.blit(bg_filter, (0, 0))
-        screen.blit(l.image, l.rect, special_flags=pygame.BLEND_RGB_ADD)
+        screen.blit(l.image, l.rect, special_flags=pygame.BLENDMODE_NONE)
         screen.blit(p.image, p.rect)
         screen.blit(display_food_needed, (10, 10))
         screen.blit(display_timer, (10, 30))
