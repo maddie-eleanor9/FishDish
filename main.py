@@ -24,8 +24,7 @@ SCREEN_HEIGHT = 370
 SCREEN_WIDTH = 530
 size = (SCREEN_WIDTH, SCREEN_HEIGHT)
 screen = pygame.display.set_mode(size)
-surface = pygame.display.set_mode((size))
-surface.fill((1, 0, 74))
+surface = pygame.display.set_mode(size)
 
 #different screens
 start_screen = True
