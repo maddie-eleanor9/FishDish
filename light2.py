@@ -6,8 +6,9 @@ class Light2:
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.image = pygame.image.load("light_test17.png")#.convert_alpha()
+        self.image = pygame.image.load("light_test17.png").convert_alpha()
         self.image.set_alpha(150)
+        self.image = pygame.transform.scale(self.image, (500,500))
         self.image_size = self.image.get_size()
         self.rect = pygame.Rect(self.x, self.y, self.image_size[0], self.image_size[1])
         self.delta = 0.7

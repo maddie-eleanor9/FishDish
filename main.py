@@ -18,15 +18,14 @@ score_font = pygame.font.SysFont('Showcard Gothic', 10)
 instructions_font = pygame.font.SysFont('Rockwell', 20)
 pygame.display.set_caption("Fish Dish")
 bg = pygame.image.load("background.png")
-bg_filter = pygame.image.load("background.png")
-bg_filter.set_alpha(250)
 
 #setup screen
 SCREEN_HEIGHT = 370
 SCREEN_WIDTH = 530
 size = (SCREEN_WIDTH, SCREEN_HEIGHT)
 screen = pygame.display.set_mode(size)
-
+surface = pygame.display.set_mode((size))
+surface.fill((1, 0, 74))
 
 #different screens
 start_screen = True
@@ -39,14 +38,14 @@ lost_enemy = False
 
 
 #misc variables
-r = 24
-g = 56
-b = 99
+r = 0
+g = 10
+b = 69
 mouse_x = 0
 mouse_y = 0
 coordinates = (mouse_x, mouse_y)
 food_needed = 10
-time_left = 45
+time_left = 60
 
 #rendering text
 title = "Fish Dish"
@@ -85,21 +84,32 @@ display_lost_food = space_to_start_font.render(lost_food_text, True, (255, 255, 
 
 win_text = "You Won!!"
 display_win = space_to_start_font.render(win_text, True, (255, 255, 255))
-print("win text: " + str(display_win.get_size()))
 
 #making sprites
 i = Instructions(195, 200)
 p = Player(230, 155)
-l = Light2(200, 105)
+l = Light2(15, -65)
 f1_x = random.randint(1,490)
 f1_y = random.randint(1, 330)
 f1 = Food(f1_x, f1_y)
+
+#makes sure jellyfish don't spawn on the player
 j1_x = random.randint(1,490)
+while j1_x > 210 and j1_x < 310:
+    j1_x = random.randint(1, 490)
 j1_y = random.randint(1,330)
+while j1_y > 135 and j1_y < 210:
+    j1_y = random.randint(1, 330)
 j1 = Jellyfish(j1_x, j1_y)
+
 j2_x = random.randint(1,490)
+while j2_x > 210 and j2_x < 310:
+    j2_x = random.randint(1, 490)
 j2_y = random.randint(1,330)
+while j2_y > 135 and j2_y < 210:
+    j2_y = random.randint(1, 330)
 j2 = Jellyfish(j2_x,j2_y)
+
 
 run = True
 #main program loop
@@ -118,47 +128,47 @@ while run:
         p.move_direction("down")
         l.move_direction("down")
 
+
     if level_1 == True:
         current_time = time.time()
         calculate_seconds = round(current_time - start_time, 2)
-        time_left = round(45 - calculate_seconds, 2)
+        time_left = round(60 - calculate_seconds, 2)
         timer_text = "Time Left: "
         display_timer = score_font.render(timer_text + str(time_left), True, (255, 255, 255))
 
 
         if calculate_seconds % 3 == 0:
             fish_move = random.randint(1,4)
-            if fish_move == 1 and f1.y > 40:
+            if fish_move == 1 and f1.y > 60:
                 f1.move("up",50)
-            elif fish_move == 2 and f1.y < 270:
+            elif fish_move == 2 and f1.y < 310:
                 f1.move("down", 50)
-            elif fish_move == 3 and f1.x > 40:
+            elif fish_move == 3 and f1.x > 60:
                 f1.move("left", 50)
-            elif fish_move == 4 and f1.x < 490:
+            elif fish_move == 4 and f1.x < 470:
                 f1.move("right", 50)
 
 
         if calculate_seconds % 4 == 0:
             jellyfish_move = random.randint(1, 4)
-            if jellyfish_move == 1 and j1.y > 100:
+            if jellyfish_move == 1 and j1.y > 90:
                 j1.move("up", 70)
-            elif jellyfish_move == 2 and j1.y < 430:
+            elif jellyfish_move == 2 and j1.y < 280:
                 j1.move("down", 70)
-            elif jellyfish_move == 3 and j1.x > 100:
+            elif jellyfish_move == 3 and j1.x > 90:
                 j1.move("left", 70)
-            elif jellyfish_move == 4 and j1.x < 490:
+            elif jellyfish_move == 4 and j1.x < 440:
                 j1.move("right", 70)
 
             jellyfish_move = random.randint(1, 4)
-            if jellyfish_move == 1 and j2.y > 100:
+            if jellyfish_move == 1 and j2.y > 90:
                 j2.move("up", 70)
-            elif jellyfish_move == 2 and j2.y < 430:
+            elif jellyfish_move == 2 and j2.y < 240:
                 j2.move("down", 70)
-            elif jellyfish_move == 3 and j2.x > 100:
+            elif jellyfish_move == 3 and j2.x > 90:
                 j2.move("left", 70)
-            elif jellyfish_move == 4 and j2.x < 490:
+            elif jellyfish_move == 4 and j2.x < 440:
                 j2.move("right", 70)
-
 
 
         if time_left <= 0:
@@ -173,6 +183,7 @@ while run:
             f1 = Food(f1_x, f1_y)
             display_food_needed = score_font.render(food_needed_text + str(food_needed), True, (255, 255, 255))
 
+
         if p.rect.colliderect(j1.rect) or p.rect.colliderect(j2.rect):
             level_1 = False
             lost_enemy = True
@@ -181,6 +192,8 @@ while run:
         if food_needed == 0:
             level_1 = False
             win_screen = True
+
+
     #event loop
     for event in pygame.event.get():
 
@@ -194,8 +207,7 @@ while run:
                 level_1 = True
                 current_time = time.time()
                 start_time = current_time
-                print("start time: " + str(start_time))
-                print("current_time: " + str(current_time))
+
 
         if event.type == pygame.MOUSEBUTTONUP and start_screen == True:
             if i.rect.collidepoint(event.pos):
@@ -208,6 +220,7 @@ while run:
 
     #blit sprites
     screen.fill((r, g, b))
+
     if start_screen == True:
         screen.blit(display_title, (122, 120))
         screen.blit(display_space_to_start, (152, 275))
@@ -217,15 +230,17 @@ while run:
         screen.blit(display_instruction1, (179, 100))
         screen.blit(display_instruction2, (90, 135))
         screen.blit(display_instruction3, (153, 170))
-        screen.blit(display_instruction4, (56, 205))
+        screen.blit(display_instruction4, (141, 205))
         screen.blit(display_instruction5, (176, 240))
     elif level_1 == True:
-        screen.blit(bg, (0, 0))
-        screen.blit(f1.image, f1.rect)
-        screen.blit(j1.image, j1.rect)
-        screen.blit(j2.image, j2.rect)
-        screen.blit(bg_filter, (0, 0))
-        screen.blit(l.image, l.rect, special_flags=pygame.BLENDMODE_NONE)
+        screen.blit(bg,(0,0))
+        surface.blit(bg, (0, 0))
+        surface.blit(f1.image, f1.rect, special_flags=pygame.BLEND_RGB_SUB)
+        surface.blit(j1.image, j1.rect, special_flags=pygame.BLEND_RGB_SUB)
+        surface.blit(j2.image, j2.rect, special_flags=pygame.BLEND_RGB_SUB)
+        surface.blit(l.image, l.rect)
+        surface.set_alpha(100)
+        screen.blit(surface, (0, 0), special_flags=pygame.BLEND_RGB_MULT)
         screen.blit(p.image, p.rect)
         screen.blit(display_food_needed, (10, 10))
         screen.blit(display_timer, (10, 30))
